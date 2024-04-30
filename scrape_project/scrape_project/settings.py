@@ -117,4 +117,4 @@ CELERY_RESULT_SERIALIZER = 'json'
 BASE_URL = 'https://search.techcrunch.com/'
 SEARCH_BASE_URL = 'https://search.techcrunch.com/search?p={keyword}&b={page_count}1'
 DEFAULT_PAGE_COUNT = 1
-MAXIMUM_PAGE_COUNT = 100
+MAXIMUM_PAGE_COUNT = 10
