@@ -112,6 +112,7 @@ CELERY_TASK_TIME_LIMIT = 60 * 60
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost//'
 
 # Constants
 BASE_URL = 'https://search.techcrunch.com/'
