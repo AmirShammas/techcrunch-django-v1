@@ -80,6 +80,8 @@ class ArticleSearchByKeywordItem(MyBaseModel):
         verbose_name='Article'
     )
     title = models.CharField(max_length=250, null=True, blank=True, verbose_name='Title')
+    description = models.TextField(null=True, blank=True, verbose_name='Description')
+    url = models.TextField(null=True, blank=True, verbose_name='Url')
     is_scraped = models.BooleanField(default=False, verbose_name='Is Scraped')
 
     class Meta:

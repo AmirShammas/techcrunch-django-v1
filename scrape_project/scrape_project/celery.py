@@ -19,5 +19,8 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django apps
 app.autodiscover_tasks()
 
+
+# celery -A scrape_project worker --loglevel=info
+
 # celery -A scrape_project worker -l INFO -P eventlet
 # celery -A scrape_project beat --loglevel=INFO

@@ -10,6 +10,7 @@ click-didyoumean==0.3.1
 click-plugins==1.1.1
 click-repl==0.3.0
 Django==4.2
+greenlet==3.0.3
 idna==3.7
 kombu==5.3.7
 prompt-toolkit==3.0.43
@@ -17,6 +18,7 @@ python-dateutil==2.9.0.post0
 requests==2.31.0
 six==1.16.0
 soupsieve==2.5
+SQLAlchemy==2.0.29
 sqlparse==0.5.0
 typing_extensions==4.11.0
 tzdata==2024.1

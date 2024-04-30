@@ -190,14 +190,14 @@ class ScraperHandler:
     def parse_search_item(self, search_by_keyword_instance, soup):
         print('Parse search item started !!')
         a_tag = soup.find('a', attrs={'class': 'fz-20 lh-22 fw-b'})
-        # p_tag = soup.find('p', attrs={'class': 'fz-14 lh-20 c-777'})
+        p_tag = soup.find('p', attrs={'class': 'fz-14 lh-20 c-777'})
 
         print('Parse search item finished !!')
         return ArticleSearchByKeywordItem.objects.create(
             search_by_keyword=search_by_keyword_instance,
             title=a_tag.text.strip(),
-            # description=p_tag.text.strip(),
-            # url=a_tag['href'],
+            description=p_tag.text.strip(),
+            url=a_tag['href'],
         )
 
     def request_to_target_url(self, url):
