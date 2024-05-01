@@ -21,7 +21,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # MyApps
     'scraper.apps.ScraperConfig',
+
+    # 3rdPartyApps
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [

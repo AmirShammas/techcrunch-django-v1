@@ -9,18 +9,17 @@ app = Celery('scrape_project', broker=settings.CELERY_BROKER_URL)
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# app.conf.beat_schedule = {
-#     'every_60_seconds_scrape_remaining_articles': {
-#         'task': 'techchurch.tasks.scrape_remaining_articles',
-#         'schedule': 60,
-#     },
-# }
+app.conf.beat_schedule = {
+    'scrape_remaining': {
+        'task': 'scraper.tasks.scrape_remaining_articles',
+        'schedule': 60*2,
+    },
+}
 
 # Load task modules from all registered Django apps
 app.autodiscover_tasks()
 
 
 # celery -A scrape_project worker --loglevel=info
+# celery -A scrape_project beat --loglevel=info
 
-# celery -A scrape_project worker -l INFO -P eventlet
-# celery -A scrape_project beat --loglevel=INFO
