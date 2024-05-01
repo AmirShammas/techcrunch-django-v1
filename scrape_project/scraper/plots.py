@@ -1,7 +1,7 @@
+import matplotlib.pyplot as plt
 from .models import Author, Tag, ArticleAuthor, ArticleTag
 import matplotlib
 matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
 
 
 x_items = list()

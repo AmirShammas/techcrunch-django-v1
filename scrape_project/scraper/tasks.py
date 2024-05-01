@@ -12,8 +12,10 @@ def search_task(keyword, page_count=settings.DEFAULT_PAGE_COUNT):
         keyword=keyword,
         page_count=page_count,
     )
-    scraper_handler = ScraperHandler(base_url=settings.BASE_URL, search_url=settings.SEARCH_URL)
-    scraped_items_count = scraper_handler.search_by_keyword(search_by_keyword_instance=search_by_keyword)
+    scraper_handler = ScraperHandler(
+        base_url=settings.BASE_URL, search_url=settings.SEARCH_URL)
+    scraped_items_count = scraper_handler.search_by_keyword(
+        search_by_keyword_instance=search_by_keyword)
     print(f'Search for keyword "{keyword}" finished!!')
     return {
         'keyword': keyword,
@@ -26,11 +28,14 @@ def search_task(keyword, page_count=settings.DEFAULT_PAGE_COUNT):
 @shared_task()
 def scrape_remaining_articles():
     print('Scrape remaining articles started !!')
-    remaining_articles = ArticleSearchByKeywordItem.objects.filter(is_scraped=False).all()
-    scraper_handler = ScraperHandler(base_url=settings.BASE_URL, search_url=settings.SEARCH_URL)
+    remaining_articles = ArticleSearchByKeywordItem.objects.filter(
+        is_scraped=False).all()
+    scraper_handler = ScraperHandler(
+        base_url=settings.BASE_URL, search_url=settings.SEARCH_URL)
     new_scraped_articles = list()
     for remaining_article in remaining_articles:
-        article, authors, tags = scraper_handler.parse_article_detail(item=remaining_article)
+        article, authors, tags = scraper_handler.parse_article_detail(
+            item=remaining_article)
         remaining_article.article = article
         remaining_article.is_scraped = True
         remaining_article.save()
@@ -41,4 +46,3 @@ def scrape_remaining_articles():
         'new_scraped_articles_count': len(new_scraped_articles),
         'status': 'finished',
     }
-

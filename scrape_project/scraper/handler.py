@@ -20,10 +20,12 @@ class ScraperHandler:
             ))
             if response.status_code == 200:
                 soup = BeautifulSoup(response.text, "html.parser")
-                search_items += self.extract_from_soup(search_by_keyword_instance=search_by_keyword_instance, soup=soup)
+                search_items += self.extract_from_soup(
+                    search_by_keyword_instance=search_by_keyword_instance, soup=soup)
 
             for search_item in search_items:
-                article, authors, tags = self.parse_article_detail(item=search_item)
+                article, authors, tags = self.parse_article_detail(
+                    item=search_item)
                 search_item.article = article
                 search_item.is_scraped = True
                 search_item.save()
@@ -52,20 +54,24 @@ class ScraperHandler:
 
         print("page_title: ", page_title)
         if page_title != 'Page not found | TechCrunch':
-            title = article_soup.find('h1', attrs={'class': 'article__title'}).text
+            title = article_soup.find(
+                'h1', attrs={'class': 'article__title'}).text
 
-            h2_tag = article_soup.find('h2', attrs={'class': 'article__subtitle'})
+            h2_tag = article_soup.find(
+                'h2', attrs={'class': 'article__subtitle'})
             if h2_tag:
                 description = h2_tag.text
             else:
                 description = item.description
 
-            script_tag_txt = article_soup.find('script', attrs={'class': 'yoast-schema-graph'}).text
+            script_tag_txt = article_soup.find(
+                'script', attrs={'class': 'yoast-schema-graph'}).text
             json_txt = json.loads(script_tag_txt)
             thumbnail = json_txt['@graph'][0]['image']['url']
 
             text = ''
-            div_tag = article_soup.find('div', attrs={'class': 'article-content'})
+            div_tag = article_soup.find(
+                'div', attrs={'class': 'article-content'})
             text_tags = div_tag.findAll()
             consumed_tags = list()
             for text_tag in text_tags:
@@ -92,7 +98,8 @@ class ScraperHandler:
 
             authors = self.parse_author(soup=article_soup)
             for author in authors:
-                ArticleAuthor.objects.get_or_create(article=article, author=author)
+                ArticleAuthor.objects.get_or_create(
+                    article=article, author=author)
 
             tags = self.parse_tags(soup=article_soup)
             for tag in tags:
@@ -113,7 +120,8 @@ class ScraperHandler:
             new_author, _ = Author.objects.get_or_create(name='Not Found!')
             authors.append(new_author)
             for author in authors:
-                ArticleAuthor.objects.get_or_create(article=article, author=author)
+                ArticleAuthor.objects.get_or_create(
+                    article=article, author=author)
 
             tags = list()
             new_tag, _ = Tag.objects.get_or_create(title='Not Found!')
@@ -128,7 +136,8 @@ class ScraperHandler:
         print('Parse_tags started !!')
         tags = list()
 
-        script_tag_txt = soup.find('script', attrs={'class': 'yoast-schema-graph'}).text
+        script_tag_txt = soup.find(
+            'script', attrs={'class': 'yoast-schema-graph'}).text
         json_txt = json.loads(script_tag_txt)
         try:
             article_tags = json_txt['@graph'][0]['keywords']
@@ -148,11 +157,13 @@ class ScraperHandler:
         print('Parse author started !!')
         authors = list()
 
-        article_author_div_tag = soup.find('div', attrs={'class': 'article__byline'})
+        article_author_div_tag = soup.find(
+            'div', attrs={'class': 'article__byline'})
         article_authors = article_author_div_tag.findAll('a')
         for article_author in article_authors:
             if '@' not in article_author.text.strip():
-                new_author, _ = Author.objects.get_or_create(name=article_author.text.strip())
+                new_author, _ = Author.objects.get_or_create(
+                    name=article_author.text.strip())
                 authors.append(new_author)
 
         print('Parse author finished !!')
@@ -168,7 +179,8 @@ class ScraperHandler:
             search_divs_siblings.append(search_div.findNextSibling())
 
         for div in search_divs_siblings:
-            search_items.append(self.parse_search_item(search_by_keyword_instance=search_by_keyword_instance, soup=div))
+            search_items.append(self.parse_search_item(
+                search_by_keyword_instance=search_by_keyword_instance, soup=div))
 
         print('Extract from soup finished !!')
         return search_items

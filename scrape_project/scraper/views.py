@@ -24,7 +24,7 @@ def PlotView(request):
         form = PlotForm(request.POST)
         if form.is_valid():
             plot_type = form.cleaned_data['plot_type']
-            if plot_type== 'article_author':
+            if plot_type == 'article_author':
                 plot_article_author()
             elif plot_type == 'article_tag':
                 plot_article_tag()
@@ -33,4 +33,3 @@ def PlotView(request):
         form = PlotForm()
 
     return render(request, 'templates/plot.html', {'form': form})
-

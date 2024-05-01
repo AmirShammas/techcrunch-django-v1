@@ -11,6 +11,7 @@ class SearchForm(forms.Form):
         initial=settings.DEFAULT_PAGE_COUNT,
     )
 
+
 class PlotForm(forms.Form):
     CHOICES = (
         ('article_author', 'Article Author'),
@@ -19,6 +20,6 @@ class PlotForm(forms.Form):
 
     plot_type = forms.CharField(
         label='Plot Type',
-        widget=forms.Select(choices=CHOICES ),
+        widget=forms.Select(choices=CHOICES),
         initial=settings.DEFAULT_PLOT_TYPE
     )

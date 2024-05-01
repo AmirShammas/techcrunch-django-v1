@@ -2,6 +2,7 @@ from django.db import models
 from abc import abstractmethod
 from django.conf import settings
 
+
 class MyBaseModel(models.Model):
     is_active = models.BooleanField(
         default=False,
@@ -26,10 +27,14 @@ class MyBaseModel(models.Model):
 
 
 class Article(MyBaseModel):
-    title = models.CharField(max_length=250, null=True, blank=True, verbose_name='Title')
-    description = models.TextField(null=True, blank=True, verbose_name='Description')
-    thumbnail = models.TextField(null=True, blank=True, verbose_name='Thumbnail')
+    title = models.CharField(max_length=250, null=True,
+                             blank=True, verbose_name='Title')
+    description = models.TextField(
+        null=True, blank=True, verbose_name='Description')
+    thumbnail = models.TextField(
+        null=True, blank=True, verbose_name='Thumbnail')
     text = models.TextField(null=True, blank=True, verbose_name='Text')
+
     class Meta:
         verbose_name = 'Article'
         verbose_name_plural = 'Articles'
@@ -40,7 +45,8 @@ class Article(MyBaseModel):
 
 
 class Keyword(MyBaseModel):
-    title = models.CharField(max_length=250, null=True, blank=True, verbose_name='Title')
+    title = models.CharField(max_length=250, null=True,
+                             blank=True, verbose_name='Title')
 
     class Meta:
         verbose_name = 'Keyword'
@@ -52,8 +58,10 @@ class Keyword(MyBaseModel):
 
 
 class SearchByKeyword(MyBaseModel):
-    keyword = models.ForeignKey(Keyword, null=True, blank=True, related_name='searches', on_delete=models.CASCADE, verbose_name='Keyword')
-    page_count = models.IntegerField(default=settings.DEFAULT_PAGE_COUNT, verbose_name='Page Count')
+    keyword = models.ForeignKey(Keyword, null=True, blank=True,
+                                related_name='searches', on_delete=models.CASCADE, verbose_name='Keyword')
+    page_count = models.IntegerField(
+        default=settings.DEFAULT_PAGE_COUNT, verbose_name='Page Count')
 
     class Meta:
         verbose_name = 'Search By Keyword'
@@ -68,7 +76,7 @@ class ArticleSearchByKeywordItem(MyBaseModel):
     search_by_keyword = models.ForeignKey(
         SearchByKeyword,
         related_name='article_search_by_keyword_items',
-        null=True, 
+        null=True,
         blank=True,
         on_delete=models.CASCADE,
         verbose_name='Search By Keyword'
@@ -81,8 +89,10 @@ class ArticleSearchByKeywordItem(MyBaseModel):
         on_delete=models.CASCADE,
         verbose_name='Article'
     )
-    title = models.CharField(max_length=250, null=True, blank=True, verbose_name='Title')
-    description = models.TextField(null=True, blank=True, verbose_name='Description')
+    title = models.CharField(max_length=250, null=True,
+                             blank=True, verbose_name='Title')
+    description = models.TextField(
+        null=True, blank=True, verbose_name='Description')
     url = models.TextField(null=True, blank=True, verbose_name='Url')
     is_scraped = models.BooleanField(default=False, verbose_name='Is Scraped')
 
@@ -94,8 +104,10 @@ class ArticleSearchByKeywordItem(MyBaseModel):
     def __str__(self):
         return f'{self.title}({self.search_by_keyword.keyword.title})'
 
+
 class Author(MyBaseModel):
-    name = models.CharField(max_length=250, null=True, blank=True, verbose_name='Name')
+    name = models.CharField(max_length=250, null=True,
+                            blank=True, verbose_name='Name')
 
     class Meta:
         verbose_name = 'Author'
@@ -107,7 +119,8 @@ class Author(MyBaseModel):
 
 
 class Tag(MyBaseModel):
-    title = models.CharField(max_length=250, null=True, blank=True, verbose_name='Title')
+    title = models.CharField(max_length=250, null=True,
+                             blank=True, verbose_name='Title')
 
     class Meta:
         verbose_name = 'Tag'
@@ -116,6 +129,7 @@ class Tag(MyBaseModel):
 
     def __str__(self):
         return self.title
+
 
 class ArticleTag(MyBaseModel):
     article = models.ForeignKey(
@@ -139,6 +153,7 @@ class ArticleTag(MyBaseModel):
     def __str__(self):
         return f'{self.article.title}_{self.tag.title}'
 
+
 class ArticleAuthor(MyBaseModel):
     article = models.ForeignKey(
         Article,
@@ -160,4 +175,3 @@ class ArticleAuthor(MyBaseModel):
 
     def __str__(self):
         return f'{self.article.title}_{self.author.name}'
-

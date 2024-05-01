@@ -15,7 +15,8 @@ def inactivate_selected_items(modeladmin, request, queryset):
 
 @register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "description", "thumbnail", "text", "is_active",)
+    list_display = ("id", "title", "description",
+                    "thumbnail", "text", "is_active",)
     list_editable = ("is_active",)
     list_display_links = ("id", "title",)
     list_filter = ("is_active", "created_at", "updated_at",)
@@ -45,7 +46,8 @@ class SearchByKeywordAdmin(admin.ModelAdmin):
 
 @register(ArticleSearchByKeywordItem)
 class ArticleSearchByKeywordItemAdmin(admin.ModelAdmin):
-    list_display = ("id", "search_by_keyword", "article", "is_scraped", "is_active",)
+    list_display = ("id", "search_by_keyword", "article",
+                    "is_scraped", "is_active",)
     list_editable = ("is_active",)
     list_display_links = ("id", "search_by_keyword",)
     list_filter = ("is_active", "created_at", "updated_at",)
@@ -91,4 +93,3 @@ class ArticleAuthorAdmin(admin.ModelAdmin):
     list_filter = ("is_active", "created_at", "updated_at",)
     search_fields = ("article", "author",)
     actions = (activate_selected_items, inactivate_selected_items)
-

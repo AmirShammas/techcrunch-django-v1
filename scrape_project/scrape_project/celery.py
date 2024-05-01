@@ -27,4 +27,3 @@ app.autodiscover_tasks()
 
 # celery -A scrape_project worker --loglevel=info
 # celery -A scrape_project beat --loglevel=info
-
