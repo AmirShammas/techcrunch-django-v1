@@ -12,9 +12,14 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'scrape_remaining': {
         'task': 'scraper.tasks.scrape_remaining_articles',
-        'schedule': 60*2,
+        'schedule': 60*60*1,
+    },
+    'scrape_daily': {
+        'task': 'scraper.tasks.scrape_remaining_articles',
+        'schedule': 60*60*24,
     },
 }
+
 
 # Load task modules from all registered Django apps
 app.autodiscover_tasks()
