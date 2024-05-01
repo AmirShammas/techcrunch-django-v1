@@ -124,3 +124,4 @@ BASE_URL = 'https://search.techcrunch.com/'
 SEARCH_URL = 'https://search.techcrunch.com/search?p={keyword}&b={page_count}1'
 DEFAULT_PAGE_COUNT = 1
 MAXIMUM_PAGE_COUNT = 10
+DEFAULT_PLOT_TYPE = 'article_author'
