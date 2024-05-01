@@ -24,7 +24,7 @@ class SearchByKeywordAdmin(admin.ModelAdmin):
 @register(ArticleSearchByKeywordItem)
 class ArticleSearchByKeywordItemAdmin(admin.ModelAdmin):
     list_display = ("id", "search_by_keyword", "article", "is_scraped", "is_active",)
-    list_editable = ("is_active", "is_scraped",)
+    list_editable = ("is_active",)
 
 
 @register(Author)

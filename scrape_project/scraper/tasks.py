@@ -30,8 +30,7 @@ def scrape_remaining_articles():
     scraper_handler = ScraperHandler(base_url=settings.BASE_URL, search_url=settings.SEARCH_URL)
     new_scraped_articles = list()
     for remaining_article in remaining_articles:
-        # article, authors, tags = scraper_handler.parse_article_detail(item=remaining_article)
-        article = scraper_handler.parse_article_detail(item=remaining_article)
+        article, authors, tags = scraper_handler.parse_article_detail(item=remaining_article)
         remaining_article.article = article
         remaining_article.is_scraped = True
         remaining_article.save()

@@ -1,5 +1,4 @@
-# from .models import Author, Tag, Article, ArticleSearchByKeywordItem, ArticleTag, ArticleAuthor
-from .models import Article, ArticleSearchByKeywordItem
+from .models import Author, Tag, Article, ArticleSearchByKeywordItem, ArticleTag, ArticleAuthor
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -24,23 +23,19 @@ class ScraperHandler:
                 search_items += self.extract_from_soup(search_by_keyword_instance=search_by_keyword_instance, soup=soup)
 
             for search_item in search_items:
-                # article, authors, tags = self.parse_article_detail(item=search_item)
-                article = self.parse_article_detail(item=search_item)
+                article, authors, tags = self.parse_article_detail(item=search_item)
                 search_item.article = article
                 search_item.is_scraped = True
                 search_item.save()
-                # data = {
-                #     'title': article.title,
-                #     'description': article.description,
-                #     'thumbnail': article.thumbnail,
-                #     'authors': authors,
-                #     'tags': tags,
-                # }
                 data = {
                     'title': article.title,
+                    'description': article.description,
+                    'thumbnail': article.thumbnail,
+                    'authors': authors,
+                    'tags': tags,
                 }
                 print(data)
-                # print('text:', article.text)
+                print('text:', article.text)
 
         print('Search finished !!')
         return len(search_items)
@@ -88,89 +83,80 @@ class ScraperHandler:
                         text += text_tag.text.strip()
                         consumed_tags.append(text_tag.findChildren())
 
-            # article, _ = Article.objects.get_or_create(
-            #     title=title,
-            #     description=description,
-            #     thumbnail=thumbnail,
-            #     text=text,
-            # )
-
             article, _ = Article.objects.get_or_create(
                 title=title,
+                description=description,
+                thumbnail=thumbnail,
+                text=text,
             )
 
-            # authors = self.parse_author(soup=article_soup)
-            # for author in authors:
-            #     ArticleAuthor.objects.get_or_create(article=article, author=author)
+            authors = self.parse_author(soup=article_soup)
+            for author in authors:
+                ArticleAuthor.objects.get_or_create(article=article, author=author)
 
-            # tags = self.parse_tags(soup=article_soup)
-            # for tag in tags:
-            #     ArticleTag.objects.get_or_create(article=article, tag=tag)
+            tags = self.parse_tags(soup=article_soup)
+            for tag in tags:
+                ArticleTag.objects.get_or_create(article=article, tag=tag)
         else:
             title = 'Not Found!'
             description = 'Not Found!'
             thumbnail = 'Not Found!'
             text = 'Not Found!'
-            # article, _ = Article.objects.get_or_create(
-            #     title=title,
-            #     description=description,
-            #     thumbnail=thumbnail,
-            #     text=text,
-            # )
-
             article, _ = Article.objects.get_or_create(
                 title=title,
+                description=description,
+                thumbnail=thumbnail,
+                text=text,
             )
 
-            # authors = list()
-            # new_author, _ = Author.objects.get_or_create(full_name='Not Found!')
-            # authors.append(new_author)
-            # for author in authors:
-            #     ArticleAuthor.objects.get_or_create(article=article, author=author)
+            authors = list()
+            new_author, _ = Author.objects.get_or_create(name='Not Found!')
+            authors.append(new_author)
+            for author in authors:
+                ArticleAuthor.objects.get_or_create(article=article, author=author)
 
-            # tags = list()
-            # new_tag, _ = Tag.objects.get_or_create(title='Not Found!')
-            # tags.append(new_tag)
-            # for tag in tags:
-            #     ArticleTag.objects.get_or_create(article=article, tag=tag)
+            tags = list()
+            new_tag, _ = Tag.objects.get_or_create(title='Not Found!')
+            tags.append(new_tag)
+            for tag in tags:
+                ArticleTag.objects.get_or_create(article=article, tag=tag)
 
         print('Parse article detail finished !!')
-        # return article, authors, tags
-        return article
+        return article, authors, tags
 
-    # def parse_tags(self, soup):
-    #     print('parse_tags => Started')
-    #     tags = list()
+    def parse_tags(self, soup):
+        print('Parse_tags started !!')
+        tags = list()
 
-    #     script_tag_txt = soup.find('script', attrs={'class': 'yoast-schema-graph'}).text
-    #     json_txt = json.loads(script_tag_txt)
-    #     try:
-    #         article_tags = json_txt['@graph'][0]['keywords']
-    #         for tag in article_tags:
-    #             new_tag, _ = Tag.objects.get_or_create(title=tag)
-    #             tags.append(new_tag)
-    #     except Exception as e:
-    #         print(e)
-    #         print("There were no tags")
-    #         new_tag, _ = Tag.objects.get_or_create(title='None')
-    #         tags.append(new_tag)
+        script_tag_txt = soup.find('script', attrs={'class': 'yoast-schema-graph'}).text
+        json_txt = json.loads(script_tag_txt)
+        try:
+            article_tags = json_txt['@graph'][0]['keywords']
+            for tag in article_tags:
+                new_tag, _ = Tag.objects.get_or_create(title=tag)
+                tags.append(new_tag)
+        except Exception as e:
+            print(e)
+            print("There were no tags !!")
+            new_tag, _ = Tag.objects.get_or_create(title='None')
+            tags.append(new_tag)
 
-    #     print('parse_tags => Finished')
-    #     return tags
+        print('Parse_tags finished !!')
+        return tags
 
-    # def parse_author(self, soup):
-    #     print('parse_author => Started')
-    #     authors = list()
+    def parse_author(self, soup):
+        print('Parse author started !!')
+        authors = list()
 
-    #     article_author_div_tag = soup.find('div', attrs={'class': 'article__byline'})
-    #     article_authors = article_author_div_tag.findAll('a')
-    #     for article_author in article_authors:
-    #         if '@' not in article_author.text.strip():
-    #             new_author, _ = Author.objects.get_or_create(full_name=article_author.text.strip())
-    #             authors.append(new_author)
+        article_author_div_tag = soup.find('div', attrs={'class': 'article__byline'})
+        article_authors = article_author_div_tag.findAll('a')
+        for article_author in article_authors:
+            if '@' not in article_author.text.strip():
+                new_author, _ = Author.objects.get_or_create(name=article_author.text.strip())
+                authors.append(new_author)
 
-    #     print('parse_author => Finished')
-    #     return authors
+        print('Parse author finished !!')
+        return authors
 
     def extract_from_soup(self, search_by_keyword_instance, soup):
         print('Extract from soup started !!')
