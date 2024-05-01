@@ -27,7 +27,9 @@ class MyBaseModel(models.Model):
 
 class Article(MyBaseModel):
     title = models.CharField(max_length=250, null=True, blank=True, verbose_name='Title')
-
+    description = models.TextField(null=True, blank=True, verbose_name='Description')
+    thumbnail = models.TextField(null=True, blank=True, verbose_name='Thumbnail')
+    text = models.TextField(null=True, blank=True, verbose_name='Text')
     class Meta:
         verbose_name = 'Article'
         verbose_name_plural = 'Articles'
@@ -91,4 +93,71 @@ class ArticleSearchByKeywordItem(MyBaseModel):
 
     def __str__(self):
         return f'{self.title}({self.search_by_keyword.keyword.title})'
+
+class Author(MyBaseModel):
+    name = models.CharField(max_length=250, null=True, blank=True, verbose_name='Name')
+
+    class Meta:
+        verbose_name = 'Author'
+        verbose_name_plural = 'Authors'
+        ordering = ("id",)
+
+    def __str__(self):
+        return self.name
+
+
+class Tag(MyBaseModel):
+    title = models.CharField(max_length=250, null=True, blank=True, verbose_name='Title')
+
+    class Meta:
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+        ordering = ("id",)
+
+    def __str__(self):
+        return self.title
+
+class ArticleTag(MyBaseModel):
+    article = models.ForeignKey(
+        Article,
+        related_name='article_tags',
+        on_delete=models.CASCADE,
+        verbose_name='Article'
+    )
+    tag = models.ForeignKey(
+        Tag,
+        related_name='article_tags',
+        on_delete=models.CASCADE,
+        verbose_name='Tag'
+    )
+
+    class Meta:
+        verbose_name = 'Article Tag'
+        verbose_name_plural = 'Article Tags'
+        ordering = ("id",)
+
+    def __str__(self):
+        return f'{self.article.title}_{self.tag.title}'
+
+class ArticleAuthor(MyBaseModel):
+    article = models.ForeignKey(
+        Article,
+        related_name='article_authors',
+        on_delete=models.CASCADE,
+        verbose_name='Article',
+    )
+    author = models.ForeignKey(
+        Author,
+        related_name='article_authors',
+        on_delete=models.CASCADE,
+        verbose_name='Author',
+    )
+
+    class Meta:
+        verbose_name = 'Article Author'
+        verbose_name_plural = 'Article Authors'
+        ordering = ("id",)
+
+    def __str__(self):
+        return f'{self.article.title}_{self.author.name}'
 
